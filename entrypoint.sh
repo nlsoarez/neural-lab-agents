@@ -64,5 +64,8 @@ cat > "$CONFIG_FILE" << EOF
 }
 EOF
 
-echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT..."
+export PAPERCLIP_PUBLIC_URL="$PUBLIC_URL"
+export BETTER_AUTH_URL="$PUBLIC_URL"
+
+echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT (public URL: $PUBLIC_URL)..."
 exec npx paperclipai run
