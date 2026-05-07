@@ -4,26 +4,22 @@ set -e
 RESOLVED_PORT="${PORT:-3100}"
 CONFIG_DIR="/paperclip/instances/neural-lab"
 CONFIG_FILE="$CONFIG_DIR/config.json"
-
-echo "==> Neural Lab OS starting..."
-echo "    Port: $RESOLVED_PORT"
-echo "    Public URL: ${PAPERCLIP_PUBLIC_URL:-not set}"
-echo "    Database: ${DATABASE_URL:+configured}${DATABASE_URL:-embedded}"
+NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 mkdir -p "$CONFIG_DIR/secrets"
 mkdir -p "$CONFIG_DIR/data/storage"
 
-# Generate master key if missing
 if [ ! -f "$CONFIG_DIR/secrets/master.key" ]; then
   head -c 32 /dev/urandom | od -A n -t x1 | tr -d ' \n' > "$CONFIG_DIR/secrets/master.key"
-  echo "==> Master key generated"
 fi
 
 cat > "$CONFIG_FILE" << EOF
 {
   "\$meta": {
     "version": 1,
-    "createdAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    "source": "entrypoint",
+    "createdAt": "$NOW",
+    "updatedAt": "$NOW"
   },
   "server": {
     "bind": "lan",
@@ -49,7 +45,8 @@ cat > "$CONFIG_FILE" << EOF
     }
   },
   "logging": {
-    "level": "info"
+    "level": "info",
+    "mode": "pretty"
   },
   "telemetry": {
     "enabled": false
@@ -57,11 +54,5 @@ cat > "$CONFIG_FILE" << EOF
 }
 EOF
 
-echo "==> Config written to $CONFIG_FILE"
-cat "$CONFIG_FILE"
-
-echo "==> Running paperclipai doctor..."
-npx paperclipai doctor || echo "==> Doctor reported issues (non-fatal, continuing)"
-
-echo "==> Starting Paperclip server..."
+echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT..."
 exec npx paperclipai run
