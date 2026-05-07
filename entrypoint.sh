@@ -17,7 +17,7 @@ cat > "$CONFIG_FILE" << EOF
 {
   "\$meta": {
     "version": 1,
-    "source": "entrypoint",
+    "source": "onboard",
     "createdAt": "$NOW",
     "updatedAt": "$NOW"
   },
@@ -46,7 +46,7 @@ cat > "$CONFIG_FILE" << EOF
   },
   "logging": {
     "level": "info",
-    "mode": "pretty"
+    "mode": "file"
   },
   "telemetry": {
     "enabled": false
