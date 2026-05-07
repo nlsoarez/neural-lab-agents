@@ -6,6 +6,12 @@ CONFIG_DIR="/paperclip/instances/neural-lab"
 CONFIG_FILE="$CONFIG_DIR/config.json"
 NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
+RAW_PUBLIC_URL="${PAPERCLIP_PUBLIC_URL:-http://localhost:$RESOLVED_PORT}"
+case "$RAW_PUBLIC_URL" in
+  http://*|https://*) PUBLIC_URL="$RAW_PUBLIC_URL" ;;
+  *) PUBLIC_URL="https://$RAW_PUBLIC_URL" ;;
+esac
+
 mkdir -p "$CONFIG_DIR/secrets"
 mkdir -p "$CONFIG_DIR/data/storage"
 
@@ -26,14 +32,15 @@ cat > "$CONFIG_FILE" << EOF
     "exposure": "public",
     "bind": "custom",
     "customBindHost": "0.0.0.0",
-    "port": $RESOLVED_PORT,
-    "publicUrl": "${PAPERCLIP_PUBLIC_URL:-http://localhost:$RESOLVED_PORT}"
+    "port": $RESOLVED_PORT
   },
   "database": {
     "url": "${DATABASE_URL:-}"
   },
   "auth": {
-    "secret": "${BETTER_AUTH_SECRET:-neural-lab-default-secret}"
+    "baseUrlMode": "explicit",
+    "publicBaseUrl": "$PUBLIC_URL",
+    "disableSignUp": false
   },
   "secrets": {
     "provider": "local_encrypted",
