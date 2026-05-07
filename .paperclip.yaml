@@ -1,0 +1,91 @@
+# Neural Lab — Paperclip Configuration
+# https://github.com/paperclipai/paperclip
+
+version: "1"
+
+company:
+  name: Neural Lab
+  companyFilePath: COMPANY.md
+  agentsFilePath: AGENTS.md
+
+agents:
+  - name: CEO
+    adapter: claude_local
+    model: claude-opus-4-7
+    effort: high
+    maxTurnsPerRun: 50
+    instructionsFilePath: agents/ceo/instructions.md
+    heartbeat: "0 9 * * *"
+    env:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      NEURAL_LAB_ENV: "production"
+
+  - name: Market Intel Agent
+    adapter: claude_local
+    model: claude-sonnet-4-6
+    effort: high
+    maxTurnsPerRun: 30
+    instructionsFilePath: agents/market-intel/instructions.md
+    heartbeat: "0 7 * * *"
+    env:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      SERPAPI_KEY: "${SERPAPI_KEY}"
+      SERPER_API_KEY: "${SERPER_API_KEY}"
+      NEURAL_LAB_ENV: "production"
+
+  - name: Marketing & Copy Agent
+    adapter: claude_local
+    model: claude-sonnet-4-6
+    effort: high
+    maxTurnsPerRun: 40
+    instructionsFilePath: agents/marketing/instructions.md
+    heartbeat: "0 8 * * 1"
+    env:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      NEURAL_LAB_ENV: "production"
+
+  - name: Social Media & Design Agent
+    adapter: claude_local
+    model: claude-sonnet-4-6
+    effort: medium
+    maxTurnsPerRun: 35
+    instructionsFilePath: agents/social/instructions.md
+    heartbeat: "0 10 * * 1"
+    env:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      NEURAL_LAB_ENV: "production"
+
+  - name: Pricing & Proposals Agent
+    adapter: claude_local
+    model: claude-sonnet-4-6
+    effort: high
+    maxTurnsPerRun: 25
+    instructionsFilePath: agents/pricing/instructions.md
+    heartbeat: triggered
+    env:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      NEURAL_LAB_ENV: "production"
+
+# Budget controls (tokens per day per agent)
+budgets:
+  CEO: 500000
+  "Market Intel Agent": 300000
+  "Marketing & Copy Agent": 400000
+  "Social Media & Design Agent": 350000
+  "Pricing & Proposals Agent": 200000
+
+# Workspace strategy
+workspace:
+  strategy: git_worktree
+  defaultBranch: main
+
+# Approval workflows
+approvals:
+  - trigger: "issue.tag == 'PROPOSTA' && issue.value > 10000"
+    requiredApprovers: ["human"]
+    description: "Propostas acima de R$10k requerem aprovação humana"
+  - trigger: "issue.tag == 'PUBLICAR'"
+    requiredApprovers: ["CEO"]
+    description: "Publicação de conteúdo externo requer aprovação do CEO Agent"
