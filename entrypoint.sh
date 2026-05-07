@@ -69,15 +69,26 @@ export BETTER_AUTH_URL="$PUBLIC_URL"
 
 IMPORT_MARKER="$CONFIG_DIR/data/.company-imported"
 
-# Import the Neural Lab company on first run (idempotent)
+# Schedule the import to run AFTER the server is up (the import CLI
+# talks to the local API at localhost:8080, so it needs a live server).
 if [ ! -f "$IMPORT_MARKER" ] && [ -d /app/neural-lab-agents ]; then
-  echo "==> Importing Neural Lab company..."
-  if npx paperclipai company import /app/neural-lab-agents; then
-    touch "$IMPORT_MARKER"
-    echo "==> Company import OK."
-  else
-    echo "==> Company import failed (may already exist). Continuing..."
-  fi
+  (
+    echo "==> Waiting for Paperclip API to come up before importing company..."
+    for i in $(seq 1 60); do
+      if curl -sf "http://localhost:$RESOLVED_PORT/api/health" >/dev/null 2>&1; then
+        echo "==> Paperclip API is up. Importing Neural Lab company..."
+        if npx paperclipai company import /app/neural-lab-agents; then
+          touch "$IMPORT_MARKER"
+          echo "==> Company import OK."
+        else
+          echo "==> Company import failed. Will retry on next deploy."
+        fi
+        exit 0
+      fi
+      sleep 2
+    done
+    echo "==> Paperclip API never came up; skipping company import."
+  ) &
 fi
 
 echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT (public URL: $PUBLIC_URL)..."
