@@ -22,7 +22,7 @@ cat > "$CONFIG_FILE" << EOF
     "updatedAt": "$NOW"
   },
   "server": {
-    "bind": "lan",
+    "bind": "public",
     "port": $RESOLVED_PORT,
     "publicUrl": "${PAPERCLIP_PUBLIC_URL:-http://localhost:$RESOLVED_PORT}"
   },
@@ -30,6 +30,7 @@ cat > "$CONFIG_FILE" << EOF
     "url": "${DATABASE_URL:-}"
   },
   "auth": {
+    "mode": "authenticated",
     "secret": "${BETTER_AUTH_SECRET:-neural-lab-default-secret}"
   },
   "secrets": {
