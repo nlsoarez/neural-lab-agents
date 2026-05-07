@@ -67,5 +67,18 @@ EOF
 export PAPERCLIP_PUBLIC_URL="$PUBLIC_URL"
 export BETTER_AUTH_URL="$PUBLIC_URL"
 
+IMPORT_MARKER="$CONFIG_DIR/data/.company-imported"
+
+# Import the Neural Lab company on first run (idempotent)
+if [ ! -f "$IMPORT_MARKER" ] && [ -d /app/neural-lab-agents ]; then
+  echo "==> Importing Neural Lab company..."
+  if npx paperclipai company import /app/neural-lab-agents; then
+    touch "$IMPORT_MARKER"
+    echo "==> Company import OK."
+  else
+    echo "==> Company import failed (may already exist). Continuing..."
+  fi
+fi
+
 echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT (public URL: $PUBLIC_URL)..."
 exec npx paperclipai run
