@@ -21,9 +21,13 @@ cat > "$CONFIG_FILE" << EOF
     "createdAt": "$NOW",
     "updatedAt": "$NOW"
   },
+  "deployment": {
+    "mode": "authenticated",
+    "exposure": "public"
+  },
   "server": {
     "bind": "custom",
-    "host": "0.0.0.0",
+    "customBindHost": "0.0.0.0",
     "port": $RESOLVED_PORT,
     "publicUrl": "${PAPERCLIP_PUBLIC_URL:-http://localhost:$RESOLVED_PORT}"
   },
@@ -31,7 +35,6 @@ cat > "$CONFIG_FILE" << EOF
     "url": "${DATABASE_URL:-}"
   },
   "auth": {
-    "mode": "authenticated",
     "secret": "${BETTER_AUTH_SECRET:-neural-lab-default-secret}"
   },
   "secrets": {
