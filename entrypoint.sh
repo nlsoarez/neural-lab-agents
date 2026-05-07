@@ -21,11 +21,9 @@ cat > "$CONFIG_FILE" << EOF
     "createdAt": "$NOW",
     "updatedAt": "$NOW"
   },
-  "deployment": {
-    "mode": "authenticated",
-    "exposure": "public"
-  },
   "server": {
+    "deploymentMode": "authenticated",
+    "exposure": "public",
     "bind": "custom",
     "customBindHost": "0.0.0.0",
     "port": $RESOLVED_PORT,
