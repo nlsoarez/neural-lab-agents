@@ -67,5 +67,22 @@ EOF
 export PAPERCLIP_PUBLIC_URL="$PUBLIC_URL"
 export BETTER_AUTH_URL="$PUBLIC_URL"
 
+# Headless auth for OpenAI Codex CLI: write the API key to ~/.codex/auth.json
+# so spawned `codex` processes can pick it up without `codex login`.
+if [ -n "${OPENAI_API_KEY:-}" ]; then
+  mkdir -p /root/.codex
+  cat > /root/.codex/auth.json <<EOF
+{
+  "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+}
+EOF
+  chmod 600 /root/.codex/auth.json
+
+  cat > /root/.codex/config.toml <<EOF
+preferred_auth_method = "apikey"
+EOF
+  echo "==> Codex CLI auth configured at /root/.codex/auth.json"
+fi
+
 echo "==> Config OK. Starting Paperclip on port $RESOLVED_PORT (public URL: $PUBLIC_URL)..."
 exec npx paperclipai run
