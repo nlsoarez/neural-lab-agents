@@ -5,10 +5,9 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "npx paperclipai run",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 5,
-    "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 30
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 60
   }
 }
