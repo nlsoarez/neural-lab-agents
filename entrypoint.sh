@@ -22,7 +22,8 @@ cat > "$CONFIG_FILE" << EOF
     "updatedAt": "$NOW"
   },
   "server": {
-    "bind": "public",
+    "bind": "custom",
+    "host": "0.0.0.0",
     "port": $RESOLVED_PORT,
     "publicUrl": "${PAPERCLIP_PUBLIC_URL:-http://localhost:$RESOLVED_PORT}"
   },
