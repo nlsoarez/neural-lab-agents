@@ -10,62 +10,60 @@ company:
 
 agents:
   - name: CEO
-    adapter: claude_local
-    model: claude-opus-4-7
+    adapter: codex
+    model: gpt-5.3-codex
     effort: high
     maxTurnsPerRun: 50
     instructionsFilePath: agents/ceo/instructions.md
     heartbeat: "0 9 * * *"
     env:
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
   - name: Market Intel Agent
-    adapter: claude_local
-    model: claude-sonnet-4-6
+    adapter: codex
+    model: gpt-5.3-codex
     effort: high
     maxTurnsPerRun: 30
     instructionsFilePath: agents/market-intel/instructions.md
     heartbeat: "0 7 * * *"
     env:
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
       SERPAPI_KEY: "${SERPAPI_KEY}"
       SERPER_API_KEY: "${SERPER_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
   - name: Marketing & Copy Agent
-    adapter: claude_local
-    model: claude-sonnet-4-6
+    adapter: codex
+    model: gpt-5.3-codex
     effort: high
     maxTurnsPerRun: 40
     instructionsFilePath: agents/marketing/instructions.md
     heartbeat: "0 8 * * 1"
     env:
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
   - name: Social Media & Design Agent
-    adapter: claude_local
-    model: claude-sonnet-4-6
+    adapter: codex
+    model: gpt-5.3-codex
     effort: medium
     maxTurnsPerRun: 35
     instructionsFilePath: agents/social/instructions.md
     heartbeat: "0 10 * * 1"
     env:
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
   - name: Pricing & Proposals Agent
-    adapter: claude_local
-    model: claude-sonnet-4-6
+    adapter: codex
+    model: gpt-5.3-codex
     effort: high
     maxTurnsPerRun: 25
     instructionsFilePath: agents/pricing/instructions.md
     heartbeat: triggered
     env:
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
 # Budget controls (tokens per day per agent)
