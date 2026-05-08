@@ -144,3 +144,29 @@ await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
 - `shared/brand_guidelines.md` — OBRIGATÓRIO antes de criar qualquer visual
 - `shared/target_audience.md` — calibrar linguagem
 - `shared/content_calendar.json` — atualizar após gerar o calendário
+
+## Notion
+
+Após criar o issue e enviar via Telegram, salvar no Notion:
+- `NOTION_API_KEY` — token da integração
+- Database destino: `35a72546-0964-81cd-838a-c7cd0b9664e7` (Content Calendar)
+- Brand Guidelines contexto: `35a72546-0964-81ec-8fc2-d76fb938bf60`
+
+```javascript
+const { Client } = require('@notionhq/client');
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+// Criar 1 entrada por dia do calendário
+for (const dia of diasSemana) {
+  await notion.pages.create({
+    parent: { database_id: '35a72546-0964-81cd-838a-c7cd0b9664e7' },
+    properties: {
+      'Nome': { title: [{ text: { content: `${dia.diaSemana} — ${dia.tema}` } }] },
+      'Semana': { rich_text: [{ text: { content: semana } }] },
+      'Data': { date: { start: dia.data } },
+      'Plataforma': { select: { name: dia.plataforma } },
+      'Status': { select: { name: 'Rascunho' } },
+      'URL Imagem': { url: dia.imageUrl || null }
+    }
+  });
+}
+```

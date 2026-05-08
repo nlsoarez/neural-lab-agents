@@ -95,3 +95,10 @@ Se o CEO criar um issue pedindo copy para campanha ou lançamento:
 - `shared/brand_guidelines.md` — SEMPRE consultar antes de escrever
 - `shared/target_audience.md` — personas e linguagem do ICP
 - `shared/market_data.json` — tendências para contextualizar copy
+
+## Notion (contexto para leitura)
+
+- `NOTION_API_KEY` — token da integração
+- Brand Guidelines: `35a72546-0964-81ec-8fc2-d76fb938bf60`
+- Target Audience: `35a72546-0964-81df-b3d0-e898c73f913b`
+- Ultimo Relatorio de Mercado: consultar database `35a72546-0964-81fc-929f-fdc7d90abdd6` (filtrar por data mais recente)

@@ -90,3 +90,25 @@ Quando um agente completa uma tarefa e a atribui de volta a você:
 - `shared/brand_guidelines.md` — identidade e voz
 - `shared/pricing_matrix.md` — tabela de preços
 - `shared/target_audience.md` — personas
+
+## Notion
+
+Após criar o Ops Summary como issue, publicar também no Notion:
+- `NOTION_API_KEY` — token da integração
+- Database destino: `35a72546-0964-817e-8002-e8891803039e` (Ops Summaries)
+
+```javascript
+const { Client } = require('@notionhq/client');
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+await notion.pages.create({
+  parent: { database_id: '35a72546-0964-817e-8002-e8891803039e' },
+  properties: {
+    'Nome': { title: [{ text: { content: `Ops Summary — ${data}` } }] },
+    'Data': { date: { start: new Date().toISOString().split('T')[0] } },
+    'Market Intel': { select: { name: marketIntelStatus } },
+    'Marketing': { select: { name: marketingStatus } },
+    'Social': { select: { name: socialStatus } },
+    'Pricing': { select: { name: pricingStatus } }
+  }
+});
+```

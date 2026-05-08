@@ -41,9 +41,31 @@ Critérios:
 - Relevante para audiência do Neural Lab (empreendedores, criativos, devs)
 - Ainda com pouca cobertura de qualidade
 
-### 3. Criar o Relatório — 1 issue, estrutura fixa
+### 3. Criar o Relatório — 1 issue + publicar no Notion
 
 **Título:** `Relatório de Mercado — [DD/MM/YYYY]`
+
+Após criar o issue, publicar no Notion database (OBRIGATÓRIO):
+
+```javascript
+const { Client } = require('@notionhq/client');
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+
+await notion.pages.create({
+  parent: { database_id: '35a72546-0964-81fc-929f-fdc7d90abdd6' },
+  properties: {
+    'Nome': { title: [{ text: { content: `Relatorio de Mercado — ${data}` } }] },
+    'Data': { date: { start: new Date().toISOString().split('T')[0] } },
+    'Status': { select: { name: 'Publicado' } },
+    'Top Tendencia': { rich_text: [{ text: { content: tendencia1 } }] },
+    'Urgencia': { select: { name: urgencia } } // ALTA, MEDIA ou BAIXA
+  },
+  children: [
+    { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: 'Top 3 Tendencias' } }] } },
+    { object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: conteudoCompleto } }] } }
+  ]
+});
+```
 
 ```markdown
 # Relatório de Mercado — [DATA]
@@ -103,3 +125,9 @@ Gerado por: Market Intel Agent | [HORÁRIO] BRT
 - `shared/competitors.md` — concorrentes para monitorar
 - `shared/target_audience.md` — ICP para filtrar relevância
 - `shared/brand_guidelines.md` — tom e voz do Neural Lab
+
+## Notion (variáveis de ambiente)
+
+- `NOTION_API_KEY` — token da integração
+- Database destino: `35a72546-0964-81fc-929f-fdc7d90abdd6` (Relatorios de Mercado)
+- Contexto Target Audience: `35a72546-0964-81df-b3d0-e898c73f913b`

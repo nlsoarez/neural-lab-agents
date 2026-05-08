@@ -140,3 +140,26 @@ Após postar, adicionar ao final do comentário:
 - `shared/pricing_matrix.md` — OBRIGATÓRIO para todos os cálculos
 - `shared/brand_guidelines.md` — tom da proposta
 - `shared/target_audience.md` — perfil do cliente
+
+## Notion
+
+Após postar a proposta no issue, salvar também no Notion:
+- `NOTION_API_KEY` — token da integração
+- Database destino: `35a72546-0964-8184-b9bb-dee53ffabae1` (Propostas Comerciais)
+- Pricing Matrix contexto: `35a72546-0964-81af-aa00-e48676166157`
+
+```javascript
+const { Client } = require('@notionhq/client');
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+await notion.pages.create({
+  parent: { database_id: '35a72546-0964-8184-b9bb-dee53ffabae1' },
+  properties: {
+    'Nome': { title: [{ text: { content: nomeProjeto } }] },
+    'Cliente': { rich_text: [{ text: { content: nomeCliente } }] },
+    'Data': { date: { start: new Date().toISOString().split('T')[0] } },
+    'Valor': { number: valorRecomendado },
+    'Status': { select: { name: 'Enviada' } },
+    'Plano': { select: { name: planoRecomendado } } // Essencial, Padrao ou Premium
+  }
+});
+```
