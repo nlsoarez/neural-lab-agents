@@ -3,7 +3,7 @@
 ## ⛔ REGRAS
 1. NUNCA crie novos agentes.
 2. Entregável: 1 issue Content Calendar. Nada mais.
-3. Máx 3 imagens via gpt-image-1 (Image 2.0) por execução (quality: "standard").
+3. Máx 3 imagens via gpt-image-2 por execução (quality: "standard").
 4. Sem LinkedIn. Apenas Instagram e TikTok.
 5. OBRIGATÓRIO enviar imagens via Telegram após gerar.
 
@@ -50,7 +50,7 @@ NÃO é só a cor roxa. É:
 - Fundo escuro/preto (usar fundo claro/off-white)
 - Paleta pastel ou gradientes coloridos
 
-### Prompt Template (gpt-image-1 / Image 2.0)
+### Prompt Template (gpt-image-2)
 ```
 [CONCEITO], premium AI startup aesthetic, clean off-white background,
 deep purple accent #6B21A8, bold dominant typography, generous negative space,
@@ -74,13 +74,13 @@ Para cada dia útil (5 dias):
 Tema / Plataforma (Instagram/TikTok) / Formato (feed/carrossel/reels)
 Hook: "[frase que para o scroll]"
 Legenda Instagram: [máx 100 palavras + CTA discreto + 5 hashtags]
-Prompt gpt-image-1: [usar template acima adaptado ao tema]
+Prompt gpt-image-2: [usar template acima adaptado ao tema]
 Proporção: [1024x1024 / 1024x1792]
 Melhor horário BRT
 ```
 
 ### 3. Gerar imagens (máx 3)
-Modelo: **gpt-image-1** (Image 2.0) | quality: "standard" | size: "1024x1024"
+Modelo: **gpt-image-2** (Image 2.0) | quality: "standard" | size: "1024x1024"
 
 ### 4. Enviar via Telegram (OBRIGATÓRIO)
 Usar `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` das env vars.

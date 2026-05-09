@@ -8,22 +8,22 @@
 
 ---
 
-## Estética: Minimal Tech Noir
+## Estética: AI Startup + Apple Keynote + Editorial Minimalista
 
 Neural Lab tem uma identidade visual precisa e inegociável.
-Todo output visual e textual deve refletir esta estética.
+Todo output visual e textual deve refletir esta estética premium e limpa.
 
 ### Paleta de Cores
 
 | Uso | Nome | Hex |
 |---|---|---|
-| Background principal | Preto Neural | `#0A0A0A` |
-| Background secundário | Grafite | `#1C1C1E` |
-| Texto principal | Branco Premium | `#F5F5F5` |
-| Texto secundário | Cinza Claro | `#A1A1AA` |
+| Background principal | Off-White Clean | `#F5F5F5` |
+| Background secundário | Branco Suave | `#FAFAFA` |
+| Texto principal | Preto Neural | `#0A0A0A` |
+| Texto secundário | Cinza Profundo | `#4A4A4A` |
 | Accent principal | Roxo Profundo | `#6B21A8` |
-| Accent hover | Roxo Brilhante | `#9333EA` |
-| Borders/dividers | Grafite Claro | `#27272A` |
+| Accent secundário | Roxo Brilhante | `#9333EA` — usado com moderação |
+| Borders/dividers | Cinza Claro | `#E5E5E5` |
 | Success | Verde Minimal | `#22C55E` |
 | Warning | Âmbar | `#F59E0B` |
 | Error | Vermelho Seco | `#EF4444` |
@@ -31,23 +31,24 @@ Todo output visual e textual deve refletir esta estética.
 ### Tipografia
 
 **Principal:** Inter (Google Fonts)
-- Headings: Inter Bold / 700
+- Headings: Inter Bold / 700 — EXTREMAMENTE forte e dominante
 - Subheadings: Inter SemiBold / 600
 - Body: Inter Regular / 400
 - Captions: Inter Medium / 500
 
 **Alternativas premium:**
-- Geist (Vercel) — para elementos tech
-- Space Grotesk — para headlines impactantes
+- Space Grotesk — para headlines de impacto
 - JetBrains Mono — para elementos de código
+
+**NUNCA trocar tipografia — consistência é identidade.**
 
 ### Hierarquia Tipográfica
 
 ```
-H1: 48–64px / Bold / #F5F5F5
-H2: 32–40px / SemiBold / #F5F5F5
-H3: 24–28px / SemiBold / #F5F5F5
-Body: 16–18px / Regular / #A1A1AA
+H1: 48–64px / Bold / #0A0A0A
+H2: 32–40px / SemiBold / #0A0A0A
+H3: 24–28px / SemiBold / #0A0A0A
+Body: 16–18px / Regular / #4A4A4A
 Caption: 12–14px / Medium / #71717A
 ```
 
@@ -57,29 +58,46 @@ Caption: 12–14px / Medium / #71717A
 
 ### Princípios
 
-1. **Espaço negativo** — o vazio comunica. Use espaçamento generoso.
-2. **Geometria limpa** — sem ornamentos desnecessários, sem sombras excessivas
-3. **Contraste forte** — preto com branco ou roxo, nunca cores pastéis
-4. **Elementos tech** — grids, linhas, partículas, circuitos abstratos como decoração
-5. **Gradientes sutis** — quando usados, sempre de preto para roxo escuro
+1. **Espaço negativo generoso** — respiro > preenchimento. O vazio comunica.
+2. **Estrutura limpa e modular** — sem ornamentos desnecessários
+3. **Contraste com propósito** — preto/branco/roxo, nunca cores pastéis
+4. **Linhas geométricas finas** — minimalistas, precisas
+5. **Elementos 3D premium** — quando aplicável, integrados ao layout
+6. **Mockups realistas** — integrados à composição, não sobrepostos
+7. **Tipografia dominante** — cada heading tem presença visual forte
+
+### O Que Faz Premium
+
+NÃO é só a cor roxa. É:
+1. **Hierarquia visual** — cada elemento tem função clara
+2. **Respiro** — espaço negativo generoso
+3. **Consistência** — mesma linguagem visual SEMPRE
+4. **Contraste** — preto/branco/roxo com propósito
+5. **Direção de arte** — cada post parece intencional, não aleatório
 
 ### Elementos Proibidos
 
-- Cores pastéis ou "cute"
+- Fundo escuro/preto como base principal
+- Cores pastéis ou gradientes coloridos
 - Fontes serifadas em elementos principais
 - Sombras drop-shadow excessivas
-- Clipart ou imagens de stock banais
+- Clipart ou imagens de stock genéricas
 - Emojis em conteúdo formal
 - Gradientes arco-íris ou multicoloridos
-- Animações excessivas ou chamativas
+- Visual poluído ou "design de Canva genérico"
+- Texto demais na imagem
+- Muitos ícones
+- Exagerar efeitos visuais
+- Trocar tipografia entre posts
 
-### Prompt Template para Geração de Imagens
+### Prompt Template para Geração de Imagens (gpt-image-2)
 
 ```
-[CONCEITO PRINCIPAL], minimal tech noir aesthetic, dark background #0A0A0A, 
-deep purple accent #6B21A8, premium typography overlay, ultra clean composition, 
-geometric elements, 4K resolution, professional digital art, AI startup visual identity, 
-high contrast, cinematic lighting, no text unless specified
+[CONCEITO], premium AI startup aesthetic, clean off-white background,
+deep purple accent #6B21A8, bold dominant typography, generous negative space,
+premium 3D elements, thin geometric lines, realistic mockup integration,
+ultra clean modular composition, Apple keynote editorial style,
+4K, professional digital art, no generic stock imagery, no text overlay
 ```
 
 ---
@@ -136,30 +154,25 @@ Neural Lab fala como um especialista confiante — não como um vendedor.
 ## Formatos por Plataforma
 
 ### Instagram Feed
-- Proporção: 1:1 (1080x1080) ou 4:5 (1080x1350)
-- Fundo: sempre escuro (#0A0A0A ou #1C1C1E)
-- Texto na imagem: máximo 7 palavras, branco ou roxo
-- Legenda: máx 150 palavras, começa com hook forte
+- Proporção: 1:1 (1024x1024) ou 4:5 (1024x1792)
+- Fundo: sempre claro/off-white (#F5F5F5 ou #FAFAFA)
+- Texto na imagem: evitar — tipografia deve ser gerada pelo modelo
+- Legenda: máx 100 palavras, começa com hook forte, CTA discreto
 
 ### Instagram Stories / Reels
-- Proporção: 9:16 (1080x1920)
+- Proporção: 9:16 (1024x1792)
 - Hook nos primeiros 2 segundos
 - CTA nos últimos 3 segundos
-
-### LinkedIn
-- Proporção: 1.91:1 (1200x628) ou quadrado
-- Tom mais formal mas ainda direto
-- Foco em B2B e autoridade técnica
-
-### YouTube Thumbnails
-- Proporção: 16:9 (1280x720)
-- Contraste máximo
-- Texto grande e legível em miniatura
 
 ### TikTok
 - Proporção: 9:16
 - Hook na primeira fala (max 3 palavras)
 - Ritmo rápido, cortes secos
+
+### YouTube Thumbnails
+- Proporção: 16:9 (1280x720)
+- Contraste máximo
+- Texto grande e legível em miniatura
 
 ---
 
