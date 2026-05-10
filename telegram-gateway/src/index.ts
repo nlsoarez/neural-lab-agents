@@ -100,7 +100,7 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
   // Rate limit
   if (!rateLimiter.check()) {
-    await telegram.sendMessage('⚠️ Rate limit — máx 10 comandos/minuto. Aguarde.')
+    await telegram.sendMessage('Rate limit - max 10 comandos/minuto. Aguarde.')
     return
   }
 
@@ -118,12 +118,11 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
   // Send typing indicator + acknowledgment
   await telegram.sendTyping()
 
-  const emoji = command.type === 'command' ? '✅' : '💬'
   await telegram.sendMessage(
-    `${emoji} <b>Recebido!</b>\n\n` +
-    `🤖 Agente: <code>${command.agent}</code>\n` +
-    `📋 Issue: ${command.title}\n\n` +
-    `⏳ Criando issue e aguardando resposta...`,
+    `<b>Recebido!</b>\n\n` +
+    `Agente: <code>${command.agent}</code>\n` +
+    `Issue: ${escapeHtml(command.title)}\n\n` +
+    `Criando issue e aguardando resposta...`,
   )
 
   try {
@@ -138,8 +137,7 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
     console.log(`[Gateway] Created issue #${issue.number} (${issue.id})`)
 
     await telegram.sendMessage(
-      `📌 Issue <b>#${issue.number}</b> criada.\n` +
-      `⏳ Aguardando resposta do agente (máx 10min)...`,
+      `Issue <b>#${issue.number}</b> criada.\nAguardando resposta do agente (max 10min)...`,
     )
 
     // Poll for completion
@@ -150,9 +148,8 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
     if (timedOut) {
       await telegram.sendMessage(
-        `⏱️ <b>Timeout</b> — Issue #${issue.number} ainda não foi resolvida após 10 minutos.\n\n` +
-        `O agente pode ainda estar processando. Verifique no Paperclip:\n` +
-        `${PAPERCLIP_API_URL}`,
+        `<b>Timeout</b> - Issue #${issue.number} nao foi resolvida em 10 minutos.\n\n` +
+        `O agente pode ainda estar processando. Verifique no Paperclip.`,
       )
       return
     }
@@ -168,8 +165,8 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
       : result
 
     await telegram.sendMessage(
-      `✅ <b>Issue #${completed.number} — ${completed.state}</b>\n` +
-      `🤖 ${lastComment?.author ?? 'Agent'}\n\n` +
+      `<b>Issue #${completed.number} - ${completed.state}</b>\n` +
+      `${lastComment?.author ?? 'Agent'}\n\n` +
       `${escapeHtml(truncated)}`,
     )
 
@@ -178,9 +175,9 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
     console.error(`[Gateway] Paperclip error:`, message)
 
     await telegram.sendMessage(
-      `❌ <b>Erro ao criar issue</b>\n\n` +
+      `<b>Erro ao criar issue</b>\n\n` +
       `<code>${escapeHtml(message.slice(0, 500))}</code>\n\n` +
-      `Verifique se o Paperclip está rodando.`,
+      `Verifique se o Paperclip esta rodando.`,
     )
   }
 }

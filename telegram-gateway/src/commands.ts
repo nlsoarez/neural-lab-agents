@@ -136,18 +136,22 @@ Verificar consumo de tokens e custos estimados.
   },
 }
 
-const HELP_TEXT = `🤖 <b>Neural Lab — Comandos Telegram</b>
-
-${Object.entries(COMMANDS)
-  .map(([cmd, def]) => `<code>${cmd}</code> — ${def.description}`)
-  .join('\n')}
-
-💬 <b>Texto livre</b> — Envie qualquer mensagem e o CEO Agent interpreta e delega para o agente correto.
-
-<i>Exemplos:</i>
-• "cria uma proposta pra e-commerce, budget 5k"
-• "como estão os agentes hoje?"
-• "preciso de 3 posts sobre IA para essa semana"`
+const HELP_TEXT = [
+  '<b>Neural Lab - Comandos Telegram</b>',
+  '',
+  '<code>/relatorio</code> - Solicita relatorio de mercado do dia',
+  '<code>/proposta</code> - Gera proposta (uso: /proposta cliente detalhes)',
+  '<code>/calendario</code> - Solicita calendario editorial da semana',
+  '<code>/status</code> - Status de todos os agentes',
+  '<code>/custo</code> - Custo acumulado do dia',
+  '',
+  '<b>Texto livre</b> - Envie qualquer mensagem e o CEO Agent interpreta e delega.',
+  '',
+  'Exemplos:',
+  '- "cria uma proposta pra e-commerce, budget 5k"',
+  '- "como estao os agentes hoje?"',
+  '- "preciso de 3 posts sobre IA para essa semana"',
+].join('\n')
 
 /**
  * Parse a Telegram message into a command structure.
