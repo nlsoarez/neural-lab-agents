@@ -20,6 +20,22 @@ export interface TelegramUpdate {
   message?: TelegramMessage
 }
 
+export interface WebhookInfo {
+  ok: boolean
+  result?: {
+    url: string
+    has_custom_certificate: boolean
+    pending_update_count: number
+    last_error_date?: number
+    last_error_message?: string
+    last_synchronization_error_date?: number
+    max_connections?: number
+    ip_address?: string
+    allowed_updates?: string[]
+  }
+  description?: string
+}
+
 interface SendMessageOptions {
   parse_mode?: 'HTML' | 'Markdown' | 'MarkdownV2'
   disable_notification?: boolean
@@ -115,8 +131,8 @@ export class TelegramClient {
   }
 
   /** Get current webhook info */
-  async getWebhookInfo(): Promise<unknown> {
+  async getWebhookInfo(): Promise<WebhookInfo> {
     const res = await fetchWithRetry(`${TELEGRAM_API}/bot${this.token}/getWebhookInfo`)
-    return res.json()
+    return res.json() as Promise<WebhookInfo>
   }
 }
