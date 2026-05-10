@@ -59,7 +59,7 @@ export class TelegramClient {
 
     const res = await fetch(`${TELEGRAM_API}/bot${this.token}/sendMessage`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(body),
     })
 
@@ -73,7 +73,7 @@ export class TelegramClient {
   async sendTyping(): Promise<void> {
     await fetch(`${TELEGRAM_API}/bot${this.token}/sendChatAction`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({
         chat_id: this.allowedChatId,
         action: 'typing',
@@ -88,7 +88,7 @@ export class TelegramClient {
 
     const res = await fetch(`${TELEGRAM_API}/bot${this.token}/setWebhook`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(body),
     })
 
