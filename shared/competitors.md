@@ -83,7 +83,7 @@ Buscar semanalmente:
 | Posicionamento | Genérico | Premium / Niche Tech |
 | Entrega | Projetos isolados | Sistemas integrados |
 | IA | Ferramenta adicional | Core do negócio |
-| Visual | Colorido, comum | Minimal Tech Noir |
+| Visual | Colorido, comum | Editorial clean, off-white premium |
 | Comunicação | Vendedora | Estratégica e direta |
 | Operação | Manual | Automatizada com agentes IA |
 | Escala | Limitada por time | Infraestrutura escalável |

@@ -21,11 +21,11 @@ monetização com IA no Brasil — onde sistemas substituem tarefas e resultado 
 
 ## Aesthetic Identity
 
-**Estética: Minimal Tech Noir**
+**Estética: AI Startup + Apple Keynote + Editorial Minimalista**
 
-- Cores: preto (#0A0A0A), branco (#F5F5F5), grafite (#1C1C1E), roxo profundo (#6B21A8)
+- Cores: off-white (#F5F5F5, #FAFAFA), preto (#0A0A0A), cinza profundo (#4A4A4A), roxo profundo (#6B21A8)
 - Tipografia: Inter, Geist, Space Grotesk — sans-serif moderno e clean
-- Visual: minimalista, geométrico, elegante, tech
+- Visual: clean editorial, espaço negativo generoso, tipografia dominante, modular, premium
 - Comunicação: direta, estratégica, sem floreios, sem clichês
 - Referências: Linear, Vercel, Notion, Arc Browser
 

@@ -107,7 +107,7 @@ neural-lab-agents/
 ├── railway.json                  # Config de deploy Railway
 │
 ├── shared/                       # Banco de contexto compartilhado
-│   ├── brand_guidelines.md       # Estética Minimal Tech Noir
+│   ├── brand_guidelines.md       # Estética Editorial Premium (off-white + roxo)
 │   ├── pricing_matrix.md         # Tabela de preços base
 │   ├── target_audience.md        # Personas e ICP
 │   ├── competitors.md            # Concorrentes monitorados

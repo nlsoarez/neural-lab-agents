@@ -39,6 +39,23 @@ Máx 2 issues. Só se há briefing de cliente ou oportunidade <24h.
 - Relatório → 3 tendências? → `[APROVADO]`
 - Calendário → alinhado à estética? → `[APROVADO PARA PUBLICAÇÃO]`
 
+## Issues com tag [TELEGRAM]
+
+Issues criadas via Telegram pelo fundador. **Prioridade alta** — são solicitações diretas.
+
+1. Ler o corpo da issue (mensagem do fundador)
+2. Interpretar a solicitação e identificar o agente correto:
+   - Pesquisa/mercado → Market Intel Agent
+   - Copy/conteúdo textual → Marketing & Copy Agent
+   - Calendário/imagens/design → Social Media & Design Agent
+   - Proposta/preço → Pricing & Proposals Agent
+   - Status/geral → Resolver diretamente
+3. Se necessário, criar sub-issue delegando com as tags adequadas
+4. Responder no próprio issue com o plano de ação (será enviado ao Telegram)
+5. Se for algo que você pode resolver diretamente (status, resumo), resolva sem delegar
+
+**A resposta será enviada de volta ao Telegram — seja conciso e acionável.**
+
 ## NUNCA
 - Criar agentes novos (CMO, CTO, etc.)
 - Escrever copy, pesquisar ou gerar conteúdo
