@@ -7,6 +7,8 @@
  */
 
 import 'dotenv/config'
+import { Buffer } from 'node:buffer'
+import { timingSafeEqual } from 'node:crypto'
 import express from 'express'
 import { TelegramClient, type TelegramUpdate } from './telegram.js'
 import { PaperclipClient } from './paperclip-client.js'
@@ -91,10 +93,10 @@ app.get('/health', (_req, res) => {
 
 // Telegram webhook
 app.post('/webhook/telegram', async (req, res) => {
-  // Validate webhook secret if configured
+  // Validate webhook secret if configured (constant-time compare)
   if (TELEGRAM_WEBHOOK_SECRET) {
-    const secret = req.headers['x-telegram-bot-api-secret-token']
-    if (secret !== TELEGRAM_WEBHOOK_SECRET) {
+    const provided = req.headers['x-telegram-bot-api-secret-token']
+    if (typeof provided !== 'string' || !secretsMatch(provided, TELEGRAM_WEBHOOK_SECRET)) {
       console.warn('[Gateway] Invalid webhook secret')
       return res.sendStatus(401)
     }
@@ -220,6 +222,15 @@ function escapeHtml(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function secretsMatch(a: string, b: string): boolean {
+  const ab = Buffer.from(a, 'utf8')
+  const bb = Buffer.from(b, 'utf8')
+  if (ab.length !== bb.length) return false
+  return timingSafeEqual(ab, bb)
 }
 
 // ── Start server ────────────────────────────────────────
