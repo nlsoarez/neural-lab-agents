@@ -3,6 +3,7 @@
  */
 
 import { fetchWithRetry } from './fetch-retry.js'
+import { logger } from './logger.js'
 
 const TELEGRAM_API = 'https://api.telegram.org'
 
@@ -83,10 +84,10 @@ export class TelegramClient {
         }),
       })
       if (!res.ok) {
-        console.warn(`[Telegram] sendTyping failed: ${res.status}`)
+        logger.warn({ status: res.status }, 'telegram sendTyping non-ok')
       }
     } catch (err) {
-      console.warn(`[Telegram] sendTyping error:`, err instanceof Error ? err.message : err)
+      logger.warn({ err }, 'telegram sendTyping error')
     }
   }
 

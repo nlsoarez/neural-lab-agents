@@ -8,11 +8,12 @@
 
 import 'dotenv/config'
 import { Buffer } from 'node:buffer'
-import { timingSafeEqual } from 'node:crypto'
+import { timingSafeEqual, randomUUID } from 'node:crypto'
 import express from 'express'
 import { TelegramClient, type TelegramUpdate } from './telegram.js'
 import { PaperclipClient } from './paperclip-client.js'
 import { parseCommand } from './commands.js'
+import { logger } from './logger.js'
 
 // ── Config ──────────────────────────────────────────────
 
@@ -21,7 +22,7 @@ function envInt(name: string, fallback: number): number {
   if (raw === undefined || raw === '') return fallback
   const parsed = parseInt(raw, 10)
   if (!Number.isFinite(parsed)) {
-    console.error(`Invalid ${name}=${raw}, must be an integer`)
+    logger.fatal({ envVar: name, value: raw }, 'invalid integer env var')
     process.exit(1)
   }
   return parsed
@@ -43,18 +44,18 @@ const TELEGRAM_MAX_MESSAGE_LEN = envInt('TELEGRAM_MAX_MESSAGE_LEN', 3800)
 const COMMAND_MAX_INPUT_LEN = envInt('COMMAND_MAX_INPUT_LEN', 4000)
 
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-  console.error('Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID')
+  logger.fatal('missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID')
   process.exit(1)
 }
 
 if (!PAPERCLIP_AUTH_TOKEN) {
-  console.error('Missing PAPERCLIP_AUTH_TOKEN')
+  logger.fatal('missing PAPERCLIP_AUTH_TOKEN')
   process.exit(1)
 }
 
 const chatId = parseInt(TELEGRAM_CHAT_ID, 10)
 if (!Number.isFinite(chatId)) {
-  console.error(`Invalid TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}, must be an integer`)
+  logger.fatal({ value: TELEGRAM_CHAT_ID }, 'invalid TELEGRAM_CHAT_ID, must be an integer')
   process.exit(1)
 }
 
@@ -97,28 +98,30 @@ app.post('/webhook/telegram', async (req, res) => {
   if (TELEGRAM_WEBHOOK_SECRET) {
     const provided = req.headers['x-telegram-bot-api-secret-token']
     if (typeof provided !== 'string' || !secretsMatch(provided, TELEGRAM_WEBHOOK_SECRET)) {
-      console.warn('[Gateway] Invalid webhook secret')
+      logger.warn('invalid webhook secret')
       return res.sendStatus(401)
     }
   }
 
   const update: TelegramUpdate = req.body
+  const requestId = randomUUID()
+  const reqLog = logger.child({ requestId, updateId: update.update_id })
 
   // Must respond 200 quickly to Telegram
   res.sendStatus(200)
 
   // Process asynchronously
-  handleUpdate(update).catch(err => {
-    console.error('[Gateway] Error handling update:', err)
+  handleUpdate(update, reqLog).catch(err => {
+    reqLog.error({ err }, 'error handling update')
   })
 })
 
 // ── Webhook handler ─────────────────────────────────────
 
-async function handleUpdate(update: TelegramUpdate): Promise<void> {
+async function handleUpdate(update: TelegramUpdate, log = logger): Promise<void> {
   // Validate sender
   if (!telegram.isAllowed(update)) {
-    console.warn(`[Gateway] Rejected message from chat ${telegram.getChatId(update)}`)
+    log.warn({ chatId: telegram.getChatId(update) }, 'rejected message from non-allowed chat')
     return
   }
 
@@ -127,16 +130,18 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
   // Rate limit
   if (!rateLimiter.check()) {
+    log.warn({ limit: RATE_LIMIT_PER_MINUTE }, 'rate limit hit')
     await telegram.sendMessage(`Rate limit - max ${RATE_LIMIT_PER_MINUTE} comandos/minuto. Aguarde.`)
     return
   }
 
   // Truncate oversized input to keep token cost bounded
-  const text = rawText.length > COMMAND_MAX_INPUT_LEN
+  const truncatedInput = rawText.length > COMMAND_MAX_INPUT_LEN
+  const text = truncatedInput
     ? rawText.slice(0, COMMAND_MAX_INPUT_LEN)
     : rawText
 
-  console.log(`[Gateway] Received: "${text.slice(0, 80)}"`)
+  log.info({ preview: text.slice(0, 80), length: rawText.length, truncated: truncatedInput }, 'message received')
 
   // Parse command
   const command = parseCommand(text)
@@ -166,7 +171,7 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
       assignee: command.agent,
     })
 
-    console.log(`[Gateway] Created issue #${issue.number} (${issue.id})`)
+    log.info({ issueNumber: issue.number, issueId: issue.id, agent: command.agent }, 'issue created')
 
     const timeoutMinutes = Math.round(POLL_TIMEOUT_MS / 60_000)
     await telegram.sendMessage(
@@ -205,7 +210,7 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error(`[Gateway] Paperclip error:`, message)
+    log.error({ err }, 'paperclip error')
 
     await telegram.sendMessage(
       `<b>Erro ao criar issue</b>\n\n` +
@@ -236,9 +241,12 @@ function secretsMatch(a: string, b: string): boolean {
 // ── Start server ────────────────────────────────────────
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Neural Lab Telegram Gateway running on port ${PORT}`)
-  console.log(`   Health: http://localhost:${PORT}/health`)
-  console.log(`   Webhook: POST /webhook/telegram`)
-  console.log(`   Paperclip: ${PAPERCLIP_API_URL}`)
-  console.log(`   Chat ID: ${TELEGRAM_CHAT_ID}`)
+  logger.info(
+    {
+      port: PORT,
+      paperclipUrl: PAPERCLIP_API_URL,
+      chatId: TELEGRAM_CHAT_ID,
+    },
+    'neural lab telegram gateway started',
+  )
 })
