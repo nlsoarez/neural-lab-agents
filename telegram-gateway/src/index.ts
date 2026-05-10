@@ -7,13 +7,13 @@
  */
 
 import 'dotenv/config'
-import { Buffer } from 'node:buffer'
-import { timingSafeEqual, randomUUID } from 'node:crypto'
+import { randomUUID } from 'node:crypto'
 import express from 'express'
 import { TelegramClient, type TelegramUpdate } from './telegram.js'
 import { PaperclipClient } from './paperclip-client.js'
 import { parseCommand } from './commands.js'
 import { logger } from './logger.js'
+import { escapeHtml, secretsMatch } from './utils.js'
 
 // ── Config ──────────────────────────────────────────────
 
@@ -218,24 +218,6 @@ async function handleUpdate(update: TelegramUpdate, log = logger): Promise<void>
       `Verifique se o Paperclip esta rodando.`,
     )
   }
-}
-
-// ── Helpers ──────────────────────────────────────────────
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
-
-function secretsMatch(a: string, b: string): boolean {
-  const ab = Buffer.from(a, 'utf8')
-  const bb = Buffer.from(b, 'utf8')
-  if (ab.length !== bb.length) return false
-  return timingSafeEqual(ab, bb)
 }
 
 // ── Start server ────────────────────────────────────────
