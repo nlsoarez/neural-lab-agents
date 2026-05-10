@@ -2,6 +2,8 @@
  * Telegram Bot API helpers — zero dependencies, just fetch.
  */
 
+import { fetchWithRetry } from './fetch-retry.js'
+
 const TELEGRAM_API = 'https://api.telegram.org'
 
 interface TelegramMessage {
@@ -57,7 +59,7 @@ export class TelegramClient {
       ...(options?.reply_to_message_id && { reply_to_message_id: options.reply_to_message_id }),
     }
 
-    const res = await fetch(`${TELEGRAM_API}/bot${this.token}/sendMessage`, {
+    const res = await fetchWithRetry(`${TELEGRAM_API}/bot${this.token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(body),
@@ -72,7 +74,7 @@ export class TelegramClient {
   /** Send a "typing..." indicator. Best-effort — logs on failure, never throws. */
   async sendTyping(): Promise<void> {
     try {
-      const res = await fetch(`${TELEGRAM_API}/bot${this.token}/sendChatAction`, {
+      const res = await fetchWithRetry(`${TELEGRAM_API}/bot${this.token}/sendChatAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify({
@@ -93,7 +95,7 @@ export class TelegramClient {
     const body: Record<string, unknown> = { url }
     if (secret) body.secret_token = secret
 
-    const res = await fetch(`${TELEGRAM_API}/bot${this.token}/setWebhook`, {
+    const res = await fetchWithRetry(`${TELEGRAM_API}/bot${this.token}/setWebhook`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(body),
@@ -113,7 +115,7 @@ export class TelegramClient {
 
   /** Get current webhook info */
   async getWebhookInfo(): Promise<unknown> {
-    const res = await fetch(`${TELEGRAM_API}/bot${this.token}/getWebhookInfo`)
+    const res = await fetchWithRetry(`${TELEGRAM_API}/bot${this.token}/getWebhookInfo`)
     return res.json()
   }
 }

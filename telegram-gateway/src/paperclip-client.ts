@@ -2,6 +2,8 @@
  * Paperclip REST API client — creates issues and polls for completion.
  */
 
+import { fetchWithRetry } from './fetch-retry.js'
+
 export interface PaperclipIssue {
   id: string
   number: number
@@ -40,7 +42,7 @@ export class PaperclipClient {
 
   private async request<T>(path: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}${path}`
-    const res = await fetch(url, {
+    const res = await fetchWithRetry(url, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
