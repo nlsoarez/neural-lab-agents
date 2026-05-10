@@ -83,16 +83,23 @@ export class PaperclipClient {
   }
 
   /**
-   * Poll an issue until it closes or times out.
-   * Returns the final issue state with comments.
+   * Poll an issue until it closes or the agent's output stabilizes.
+   *
+   * Stability rule: when the issue is still open, we only return early if the
+   * comment count is unchanged between two consecutive polls AND the last
+   * comment is from an agent AND it has been quiet for at least
+   * `stableAfterMs`. This prevents bailing out mid-stream when an agent
+   * posts multiple comments in sequence.
    */
   async waitForCompletion(
     issueId: string,
-    options: { intervalMs?: number; timeoutMs?: number } = {},
+    options: { intervalMs?: number; timeoutMs?: number; stableAfterMs?: number } = {},
   ): Promise<{ issue: PaperclipIssue; timedOut: boolean }> {
-    const interval = options.intervalMs ?? 30_000  // 30s default
-    const timeout = options.timeoutMs ?? 600_000   // 10min default
+    const interval = options.intervalMs ?? 30_000
+    const timeout = options.timeoutMs ?? 600_000
+    const stableAfter = options.stableAfterMs ?? 60_000
     const start = Date.now()
+    let prevCommentCount = -1
 
     while (Date.now() - start < timeout) {
       const issue = await this.getIssue(issueId)
@@ -101,15 +108,15 @@ export class PaperclipClient {
         return { issue, timedOut: false }
       }
 
-      // Check if there are new comments (agent responded but didn't close)
-      if (issue.comments.length > 0) {
-        const lastComment = issue.comments[issue.comments.length - 1]
+      const count = issue.comments.length
+      if (count > 0 && count === prevCommentCount) {
+        const lastComment = issue.comments[count - 1]
         const commentAge = Date.now() - new Date(lastComment.created_at).getTime()
-        // If the last comment is recent (<2min) and from an agent, return it
-        if (commentAge < 120_000 && lastComment.author !== 'human') {
+        if (commentAge >= stableAfter && lastComment.author !== 'human') {
           return { issue, timedOut: false }
         }
       }
+      prevCommentCount = count
 
       await new Promise(resolve => setTimeout(resolve, interval))
     }

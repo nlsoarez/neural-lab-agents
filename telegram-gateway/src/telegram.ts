@@ -65,20 +65,27 @@ export class TelegramClient {
 
     if (!res.ok) {
       const err = await res.text()
-      console.error(`[Telegram] sendMessage failed: ${res.status} — ${err}`)
+      throw new Error(`Telegram sendMessage ${res.status}: ${err}`)
     }
   }
 
-  /** Send a "typing..." indicator */
+  /** Send a "typing..." indicator. Best-effort — logs on failure, never throws. */
   async sendTyping(): Promise<void> {
-    await fetch(`${TELEGRAM_API}/bot${this.token}/sendChatAction`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({
-        chat_id: this.allowedChatId,
-        action: 'typing',
-      }),
-    })
+    try {
+      const res = await fetch(`${TELEGRAM_API}/bot${this.token}/sendChatAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify({
+          chat_id: this.allowedChatId,
+          action: 'typing',
+        }),
+      })
+      if (!res.ok) {
+        console.warn(`[Telegram] sendTyping failed: ${res.status}`)
+      }
+    } catch (err) {
+      console.warn(`[Telegram] sendTyping error:`, err instanceof Error ? err.message : err)
+    }
   }
 
   /** Register webhook URL with Telegram */
@@ -92,9 +99,14 @@ export class TelegramClient {
       body: JSON.stringify(body),
     })
 
+    if (!res.ok) {
+      const text = await res.text()
+      throw new Error(`Telegram setWebhook ${res.status}: ${text}`)
+    }
+
     const data = await res.json() as { ok: boolean; description?: string }
     if (!data.ok) {
-      console.error(`[Telegram] setWebhook failed:`, data.description)
+      throw new Error(`Telegram setWebhook rejected: ${data.description ?? 'unknown'}`)
     }
     return data.ok
   }

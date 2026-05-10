@@ -14,31 +14,56 @@ import { parseCommand } from './commands.js'
 
 // ── Config ──────────────────────────────────────────────
 
-const PORT = parseInt(process.env.GATEWAY_PORT ?? process.env.PORT ?? '3200', 10)
+function envInt(name: string, fallback: number): number {
+  const raw = process.env[name]
+  if (raw === undefined || raw === '') return fallback
+  const parsed = parseInt(raw, 10)
+  if (!Number.isFinite(parsed)) {
+    console.error(`Invalid ${name}=${raw}, must be an integer`)
+    process.exit(1)
+  }
+  return parsed
+}
+
+const PORT = envInt('GATEWAY_PORT', envInt('PORT', 3200))
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
 const TELEGRAM_WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET
 const PAPERCLIP_API_URL = process.env.PAPERCLIP_API_URL ?? 'http://localhost:3100'
 const PAPERCLIP_AUTH_TOKEN = process.env.PAPERCLIP_AUTH_TOKEN
 
+// Tunables — all optional, with safe defaults
+const RATE_LIMIT_PER_MINUTE = envInt('RATE_LIMIT_PER_MINUTE', 10)
+const POLL_INTERVAL_MS = envInt('POLL_INTERVAL_MS', 30_000)
+const POLL_TIMEOUT_MS = envInt('POLL_TIMEOUT_MS', 600_000)
+const POLL_STABLE_AFTER_MS = envInt('POLL_STABLE_AFTER_MS', 60_000)
+const TELEGRAM_MAX_MESSAGE_LEN = envInt('TELEGRAM_MAX_MESSAGE_LEN', 3800)
+const COMMAND_MAX_INPUT_LEN = envInt('COMMAND_MAX_INPUT_LEN', 4000)
+
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-  console.error('❌ Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID')
+  console.error('Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID')
   process.exit(1)
 }
 
 if (!PAPERCLIP_AUTH_TOKEN) {
-  console.error('❌ Missing PAPERCLIP_AUTH_TOKEN')
+  console.error('Missing PAPERCLIP_AUTH_TOKEN')
   process.exit(1)
 }
 
-const telegram = new TelegramClient(TELEGRAM_BOT_TOKEN, parseInt(TELEGRAM_CHAT_ID, 10))
+const chatId = parseInt(TELEGRAM_CHAT_ID, 10)
+if (!Number.isFinite(chatId)) {
+  console.error(`Invalid TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}, must be an integer`)
+  process.exit(1)
+}
+
+const telegram = new TelegramClient(TELEGRAM_BOT_TOKEN, chatId)
 const paperclip = new PaperclipClient(PAPERCLIP_API_URL, PAPERCLIP_AUTH_TOKEN)
 
-// ── Rate limiting (simple in-memory) ────────────────────
+// ── Rate limiting (simple in-memory, sliding window) ────
 
 const rateLimiter = {
   requests: [] as number[],
-  maxPerMinute: 10,
+  maxPerMinute: RATE_LIMIT_PER_MINUTE,
 
   check(): boolean {
     const now = Date.now()
@@ -95,14 +120,19 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
     return
   }
 
-  const text = telegram.getText(update)
-  if (!text) return
+  const rawText = telegram.getText(update)
+  if (!rawText) return
 
   // Rate limit
   if (!rateLimiter.check()) {
-    await telegram.sendMessage('Rate limit - max 10 comandos/minuto. Aguarde.')
+    await telegram.sendMessage(`Rate limit - max ${RATE_LIMIT_PER_MINUTE} comandos/minuto. Aguarde.`)
     return
   }
+
+  // Truncate oversized input to keep token cost bounded
+  const text = rawText.length > COMMAND_MAX_INPUT_LEN
+    ? rawText.slice(0, COMMAND_MAX_INPUT_LEN)
+    : rawText
 
   console.log(`[Gateway] Received: "${text.slice(0, 80)}"`)
 
@@ -136,19 +166,21 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
     console.log(`[Gateway] Created issue #${issue.number} (${issue.id})`)
 
+    const timeoutMinutes = Math.round(POLL_TIMEOUT_MS / 60_000)
     await telegram.sendMessage(
-      `Issue <b>#${issue.number}</b> criada.\nAguardando resposta do agente (max 10min)...`,
+      `Issue <b>#${issue.number}</b> criada.\nAguardando resposta do agente (max ${timeoutMinutes}min)...`,
     )
 
     // Poll for completion
     const { issue: completed, timedOut } = await paperclip.waitForCompletion(issue.id, {
-      intervalMs: 30_000,
-      timeoutMs: 600_000,
+      intervalMs: POLL_INTERVAL_MS,
+      timeoutMs: POLL_TIMEOUT_MS,
+      stableAfterMs: POLL_STABLE_AFTER_MS,
     })
 
     if (timedOut) {
       await telegram.sendMessage(
-        `<b>Timeout</b> - Issue #${issue.number} nao foi resolvida em 10 minutos.\n\n` +
+        `<b>Timeout</b> - Issue #${issue.number} nao foi resolvida em ${timeoutMinutes} minutos.\n\n` +
         `O agente pode ainda estar processando. Verifique no Paperclip.`,
       )
       return
@@ -158,10 +190,9 @@ async function handleUpdate(update: TelegramUpdate): Promise<void> {
     const lastComment = completed.comments[completed.comments.length - 1]
     const result = lastComment?.body ?? '(sem comentário do agente)'
 
-    // Truncate if too long for Telegram (max 4096 chars)
-    const maxLen = 3800
-    const truncated = result.length > maxLen
-      ? result.slice(0, maxLen) + '\n\n... (truncado — ver completo no Paperclip)'
+    // Truncate if too long for Telegram (hard limit 4096 chars)
+    const truncated = result.length > TELEGRAM_MAX_MESSAGE_LEN
+      ? result.slice(0, TELEGRAM_MAX_MESSAGE_LEN) + '\n\n... (truncado — ver completo no Paperclip)'
       : result
 
     await telegram.sendMessage(
