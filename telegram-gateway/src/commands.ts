@@ -92,7 +92,7 @@ Gerar calendário editorial da semana conforme instruções.
   },
 
   '/status': {
-    agent: 'CEO Agent',
+    agent: 'CEO',
     labels: ['STATUS', 'TELEGRAM'],
     titleFn: () => {
       const date = new Date().toLocaleDateString('pt-BR')
@@ -114,7 +114,7 @@ Gerar relatório de status de todos os agentes.
   },
 
   '/custo': {
-    agent: 'CEO Agent',
+    agent: 'CEO',
     labels: ['CUSTO', 'TELEGRAM'],
     titleFn: () => {
       const date = new Date().toLocaleDateString('pt-BR')
@@ -145,7 +145,7 @@ const HELP_TEXT = [
   '<code>/status</code> - Status de todos os agentes',
   '<code>/custo</code> - Custo acumulado do dia',
   '',
-  '<b>Texto livre</b> - Envie qualquer mensagem e o CEO Agent interpreta e delega.',
+  '<b>Texto livre</b> - Envie qualquer mensagem e o CEO interpreta e delega.',
   '',
   'Exemplos:',
   '- "cria uma proposta pra e-commerce, budget 5k"',
@@ -186,10 +186,10 @@ export function parseCommand(text: string): ParsedCommand {
     }
   }
 
-  // Fallback: free text → CEO Agent
+  // Fallback: free text → CEO
   return {
     type: 'freetext',
-    agent: 'CEO Agent',
+    agent: 'CEO',
     labels: ['TELEGRAM'],
     title: `💬 Solicitação Telegram: ${trimmed.slice(0, 60)}${trimmed.length > 60 ? '...' : ''}`,
     body: `## Mensagem do Fundador via Telegram

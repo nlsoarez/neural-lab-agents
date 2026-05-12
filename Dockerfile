@@ -12,13 +12,10 @@ RUN apt-get update && apt-get install -y \
 # Install Paperclip globally
 RUN npm install -g paperclipai
 
-# Install Claude Code CLI (Anthropic agent adapter)
-RUN npm install -g @anthropic-ai/claude-code
-
 # Install OpenAI Codex CLI (OpenAI agent adapter)
 RUN npm install -g @openai/codex
 
-# Install OpenAI SDK (DALL-E 3 image generation)
+# Install OpenAI SDK (GPT-Image-2 image generation)
 RUN npm install -g openai
 
 # Set working directory

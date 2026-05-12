@@ -10,23 +10,29 @@ company:
 
 agents:
   - name: CEO
-    adapter: codex
-    model: gpt-5.3-codex
-    effort: high
-    maxTurnsPerRun: 50
+    adapter: codex_local
+    cwd: /app/neural-lab-agents
+    model: gpt-5.4-mini
+    effort: medium
+    maxTurnsPerRun: 18
+    timeoutSec: 600
+    graceSec: 30
     instructionsFilePath: agents/ceo/instructions.md
-    heartbeat: "0 9 * * *"
+    heartbeat: "0 9 * * 1-5"
     env:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
   - name: Market Intel Agent
-    adapter: codex
-    model: gpt-5.3-codex
-    effort: high
-    maxTurnsPerRun: 30
+    adapter: codex_local
+    cwd: /app/neural-lab-agents
+    model: gpt-5.4-mini
+    effort: medium
+    maxTurnsPerRun: 16
+    timeoutSec: 600
+    graceSec: 30
     instructionsFilePath: agents/market-intel/instructions.md
-    heartbeat: "0 7 * * *"
+    heartbeat: "0 7 * * 1-5"
     env:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       SERPAPI_KEY: "${SERPAPI_KEY}"
@@ -34,10 +40,13 @@ agents:
       NEURAL_LAB_ENV: "production"
 
   - name: Marketing & Copy Agent
-    adapter: codex
-    model: gpt-5.3-codex
-    effort: high
-    maxTurnsPerRun: 40
+    adapter: codex_local
+    cwd: /app/neural-lab-agents
+    model: gpt-5.4-mini
+    effort: medium
+    maxTurnsPerRun: 16
+    timeoutSec: 600
+    graceSec: 30
     instructionsFilePath: agents/marketing/instructions.md
     heartbeat: "0 8 * * 1"
     env:
@@ -45,34 +54,42 @@ agents:
       NEURAL_LAB_ENV: "production"
 
   - name: Social Media & Design Agent
-    adapter: codex
-    model: gpt-5.3-codex
+    adapter: codex_local
+    cwd: /app/neural-lab-agents
+    model: gpt-5.4-mini
     effort: medium
-    maxTurnsPerRun: 35
+    maxTurnsPerRun: 16
+    timeoutSec: 900
+    graceSec: 30
     instructionsFilePath: agents/social/instructions.md
     heartbeat: "0 10 * * 1"
     env:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      OPENAI_IMAGE_MODEL: "gpt-image-2"
       NEURAL_LAB_ENV: "production"
 
   - name: Pricing & Proposals Agent
-    adapter: codex
-    model: gpt-5.3-codex
-    effort: high
-    maxTurnsPerRun: 25
+    adapter: codex_local
+    cwd: /app/neural-lab-agents
+    model: gpt-5.4-mini
+    effort: low
+    maxTurnsPerRun: 12
+    timeoutSec: 480
+    graceSec: 30
     instructionsFilePath: agents/pricing/instructions.md
     heartbeat: triggered
     env:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       NEURAL_LAB_ENV: "production"
 
-# Budget controls (tokens per day per agent)
+# Planning token ceilings per day per agent. Also set real monthly USD budgets
+# in Paperclip UI/API, because Paperclip enforces budgetMonthlyCents there.
 budgets:
-  CEO: 500000
-  "Market Intel Agent": 300000
-  "Marketing & Copy Agent": 400000
-  "Social Media & Design Agent": 350000
-  "Pricing & Proposals Agent": 200000
+  CEO: 60000
+  "Market Intel Agent": 80000
+  "Marketing & Copy Agent": 70000
+  "Social Media & Design Agent": 90000
+  "Pricing & Proposals Agent": 50000
 
 # Workspace strategy
 workspace:

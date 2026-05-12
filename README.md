@@ -2,7 +2,7 @@
 
 > Crie ativos com IA. Automatize. Escale.
 
-Sistema multiagente rodando 24h no Railway via Paperclip.
+Sistema multiagente rodando no Railway via Paperclip, com heartbeats controlados para evitar custo ocioso.
 5 agentes especializados orquestrados para automatizar toda a operação do Neural Lab.
 
 ---
@@ -10,21 +10,21 @@ Sistema multiagente rodando 24h no Railway via Paperclip.
 ## Arquitetura
 
 ```
-CEO Agent (Operations Director) — Claude Opus 4.7
-├── Market Intel Agent          — Claude Sonnet 4.6 [daily 07:00]
-├── Marketing & Copy Agent      — Claude Sonnet 4.6 [weekly Mon 08:00]
-├── Social Media & Design Agent — Claude Sonnet 4.6 [weekly Mon 10:00]
-└── Pricing & Proposals Agent   — Claude Sonnet 4.6 [on-demand]
+CEO (Operations Director)       — GPT-5.4 mini [weekdays 09:00]
+├── Market Intel Agent          — GPT-5.4 mini [weekdays 07:00]
+├── Marketing & Copy Agent      — GPT-5.4 mini [weekly Mon 08:00]
+├── Social Media & Design Agent — GPT-5.4 mini + GPT-Image-2 [weekly Mon 10:00]
+└── Pricing & Proposals Agent   — GPT-5.4 mini [on-demand]
 ```
 
 ## O Que o Sistema Faz Automaticamente
 
 | Quando | O Quê |
 |---|---|
-| Todo dia às 07:00 | Relatório de mercado + tendências de IA |
-| Todo dia às 09:00 | CEO revisa, delega e gera Ops Summary |
+| Dias úteis às 07:00 | Relatório de mercado + tendências de IA |
+| Dias úteis às 09:00 | CEO revisa, delega e gera Ops Summary |
 | Segunda 08:00 | Plano de marketing + copy da semana |
-| Segunda 10:00 | Calendário editorial completo (7 dias) |
+| Segunda 10:00 | Calendário editorial de 5 dias + até 3 imagens |
 | On-demand | Proposta comercial em < 2h via briefing |
 
 ---
@@ -33,8 +33,8 @@ CEO Agent (Operations Director) — Claude Opus 4.7
 
 ### Pré-requisitos
 - Conta no [Railway](https://railway.app)
-- [Anthropic API Key](https://console.anthropic.com)
-- [SerpAPI Key](https://serpapi.com) (recomendado)
+- [OpenAI API Key](https://platform.openai.com/api-keys)
+- [Serper.dev](https://serper.dev) ou [SerpAPI](https://serpapi.com) para pesquisa de mercado (opcional, mas recomendado)
 
 ### 1. Clonar o repositório
 
@@ -72,14 +72,15 @@ railway up
 
 Após o deploy, acesse o terminal do Railway:
 ```bash
-npx paperclipai company import /app/neural-lab-agents
+npx paperclipai company import --from /app/neural-lab-agents
 ```
 
 ### 5. Verificar agentes
 
 Acesse `https://neural-lab.up.railway.app` e verifique:
 - [ ] 5 agentes aparecem no org chart
-- [ ] Heartbeats configurados corretamente
+- [ ] Test Environment passa para todos os agentes
+- [ ] Heartbeats reativados manualmente após validar adapters e budgets
 - [ ] Shared context bank acessível
 
 ---
@@ -88,7 +89,7 @@ Acesse `https://neural-lab.up.railway.app` e verifique:
 
 | Variável | Onde obter |
 |---|---|
-| `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) |
+| `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
 | `BETTER_AUTH_SECRET` | `openssl rand -hex 32` |
 | `DATABASE_URL` | Railway → PostgreSQL service |
 | `PAPERCLIP_PUBLIC_URL` | URL do seu deploy no Railway |
@@ -132,7 +133,7 @@ neural-lab-agents/
 ## Como Acionar os Agentes
 
 ### Relatório de Mercado (automático)
-Acontece diariamente às 07:00. Para acionar manualmente:
+Acontece em dias úteis às 07:00. Para acionar manualmente:
 Criar issue: `📈 Relatório de Mercado — MANUAL` e assignar ao Market Intel Agent.
 
 ### Calendário Editorial (automático)
@@ -148,10 +149,10 @@ O Pricing Agent gera a proposta em < 2h.
 ## Fases de Implementação
 
 - [x] **Fase 0** — Estrutura base e arquivos de configuração
-- [ ] **Fase 1** — Deploy no Railway + agentes ativos + DALL-E 3 gerando imagens reais
+- [ ] **Fase 1** — Deploy no Railway + agentes ativos + GPT-Image-2 gerando imagens reais
 - [ ] **Fase 2** — Automações externas (n8n, Telegram, Notion)
 - [ ] **Fase 3** — Feedback loop + métricas de performance de conteúdo
-- [ ] **Fase 4** — Modelos de imagem abertos (Flux via Replicate) se DALL-E não atender
+- [ ] **Fase 4** — Modelos de imagem abertos (Flux via Replicate) somente se GPT-Image-2 não atender
 
 ---
 
@@ -161,20 +162,21 @@ O Pricing Agent gera a proposta em < 2h.
 |---|---|---|
 | Railway (servidor) | Hobby/Pro | $5–20 |
 | Railway (PostgreSQL) | Managed | $5 |
-| Anthropic API (Claude) | Pay per use | $20–80 |
-| OpenAI API (DALL-E 3) | Pay per use | ~$15–40 (300–500 imagens) |
-| SerpAPI | Developer | $75 |
-| **Total estimado** | | **~$120–220/mês** |
+| OpenAI texto (GPT-5.4 mini) | Pay per use | ~$10–35 |
+| OpenAI imagens (GPT-Image-2) | Pay per use | ~$5–25 |
+| Serper.dev ou SerpAPI | opcional | $0–75 |
+| **Total estimado sem SerpAPI pago** | | **~$25–85/mês** |
+| **Total estimado com SerpAPI Developer** | | **~$100–160/mês** |
 
-> DALL-E 3 HD custa ~$0.08/imagem. Para ~300 imagens/mês (calendário + extras): ~$24.
+> Controle duro de custo deve ser configurado no Paperclip UI/API como budgetMonthlyCents por agente. O YAML reduz modelos, turnos, heartbeats e limite de imagens, mas budget em dólares precisa estar ativo no Paperclip.
 
 ---
 
 ## Tecnologias
 
 - **Orquestração:** [Paperclip](https://github.com/paperclipai/paperclip)
-- **LLM principal:** Claude Opus 4.7 (CEO) + Claude Sonnet 4.6 (especialistas) — Anthropic API
-- **Geração de imagens:** DALL-E 3 — OpenAI API (ativo desde Fase 1)
+- **LLM principal:** GPT-5.4 mini via Codex Local — OpenAI API
+- **Geração de imagens:** GPT-Image-2 — OpenAI API (modelo fixo do Social Media & Design Agent)
 - **Infra:** Railway (Node.js + PostgreSQL)
 - **Search:** SerpAPI / Serper.dev
 - **Automação:** n8n / Make.com (Fase 2)

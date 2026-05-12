@@ -9,11 +9,11 @@ Each agent has a specific role, adapter configuration, and heartbeat schedule.
 
 **Role:** Orchestrates all agents, prioritizes demands, validates deliveries, generates executive dashboards.
 
-**Adapter:** claude_local
-**Model:** claude-opus-4-7
-**Effort:** high
-**Max Turns Per Run:** 50
-**Heartbeat:** `0 9 * * *` (daily at 09:00 BRT)
+**Adapter:** codex_local
+**Model:** gpt-5.4-mini
+**Effort:** medium
+**Max Turns Per Run:** 18
+**Heartbeat:** `0 9 * * 1-5` (weekdays at 09:00 BRT)
 **Instructions:** agents/ceo/instructions.md
 
 **Responsibilities:**
@@ -29,11 +29,11 @@ Each agent has a specific role, adapter configuration, and heartbeat schedule.
 
 **Role:** Monitors AI market trends, detects opportunities, generates strategic intelligence reports.
 
-**Adapter:** claude_local
-**Model:** claude-sonnet-4-6
-**Effort:** high
-**Max Turns Per Run:** 30
-**Heartbeat:** `0 7 * * *` (daily at 07:00 BRT)
+**Adapter:** codex_local
+**Model:** gpt-5.4-mini
+**Effort:** medium
+**Max Turns Per Run:** 16
+**Heartbeat:** `0 7 * * 1-5` (weekdays at 07:00 BRT)
 **Instructions:** agents/market-intel/instructions.md
 
 **Tools Required:**
@@ -53,10 +53,10 @@ Each agent has a specific role, adapter configuration, and heartbeat schedule.
 
 **Role:** Creates high-conversion campaigns, copy, funnels, and launch strategies.
 
-**Adapter:** claude_local
-**Model:** claude-sonnet-4-6
-**Effort:** high
-**Max Turns Per Run:** 40
+**Adapter:** codex_local
+**Model:** gpt-5.4-mini
+**Effort:** medium
+**Max Turns Per Run:** 16
 **Heartbeat:** `0 8 * * 1` (every Monday at 08:00 BRT)
 **Instructions:** agents/marketing/instructions.md
 
@@ -73,17 +73,19 @@ Each agent has a specific role, adapter configuration, and heartbeat schedule.
 
 **Role:** Creates visual content, editorial calendars, and image generation prompts.
 
-**Adapter:** claude_local
-**Model:** claude-sonnet-4-6
+**Adapter:** codex_local
+**Model:** gpt-5.4-mini
 **Effort:** medium
-**Max Turns Per Run:** 35
+**Max Turns Per Run:** 16
 **Heartbeat:** `0 10 * * 1` (every Monday at 10:00 BRT)
 **Instructions:** agents/social/instructions.md
 
+**Image Model:** gpt-image-2 (OpenAI), `quality: "standard"`, max 3 generated images per weekly run.
+
 **Responsibilities:**
-- Generate 7-day editorial calendar
-- Create Midjourney/Flux/DALL-E image generation prompts
-- Write captions for Instagram, LinkedIn, TikTok, YouTube
+- Generate 5-business-day editorial calendar
+- Create GPT-Image-2 image generation prompts
+- Write captions/scripts for Instagram and TikTok
 - Generate Reels/TikTok hooks (first 3 seconds)
 - Update shared/content_calendar.json
 
@@ -93,10 +95,10 @@ Each agent has a specific role, adapter configuration, and heartbeat schedule.
 
 **Role:** Analyzes client briefings and generates intelligent quotes and commercial proposals.
 
-**Adapter:** claude_local
-**Model:** claude-sonnet-4-6
-**Effort:** high
-**Max Turns Per Run:** 25
+**Adapter:** codex_local
+**Model:** gpt-5.4-mini
+**Effort:** low
+**Max Turns Per Run:** 12
 **Heartbeat:** triggered (on-demand via @mention or issue tag [BRIEFING])
 **Instructions:** agents/pricing/instructions.md
 

@@ -45,18 +45,16 @@ emails de marketing, landing pages, apresentações.
 ### Estrutura de Conteúdo
 
 - **Hook:** Primeira linha deve gerar curiosidade ou valor imediato
-- **Corpo:** Máximo 3 parágrafos para LinkedIn, 280 chars para Twitter
+- **Corpo:** Instagram até 100 palavras, TikTok até 60 segundos de roteiro
 - **CTA:** Sutil, orientado a valor ("Quer saber como aplicamos isso? Link na bio")
-- **Hashtags:** Máximo 5 para LinkedIn, 3 para Twitter. Sempre incluir: #NeuralLab #IA
+- **Hashtags:** Máximo 5. Sempre incluir: #NeuralLab #IA
 
 ### Formatação por Plataforma
 
 | Plataforma | Tamanho | Tom | Formato |
 |---|---|---|---|
-| LinkedIn | 200-500 palavras | Profissional-educativo | Parágrafos curtos, bullet points |
-| Twitter/X | 280 chars | Direto, provocativo | Thread se necessário (max 5 tweets) |
-| Blog | 800-1500 palavras | Deep-dive técnico | H2/H3, code blocks, imagens |
-| Newsletter | 300-600 palavras | Pessoal, curadoria | Seções: Destaque, Insights, Links |
+| Instagram | até 100 palavras | Profissional-casual | Hook, legenda curta, CTA discreto |
+| TikTok | até 60s | Direto, provocativo | Hook 3s, roteiro, cena/visual |
 | Proposta | 2-4 páginas | Formal-consultivo | Seções: Contexto, Solução, Investimento |
 
 ## Task Template

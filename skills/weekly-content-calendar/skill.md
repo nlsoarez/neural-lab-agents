@@ -84,10 +84,11 @@ Execute a geração do calendário editorial visual conforme agents/social/instr
 
 ## Checklist de Entrega
 
-- [ ] Gerar 7 posts (um por dia, plataforma prioritária)
-- [ ] Para cada post: hook, legenda Instagram, legenda LinkedIn, script TikTok
+- [ ] Gerar 5 posts (dias úteis, plataforma Instagram ou TikTok)
+- [ ] Para cada post: hook, legenda Instagram quando aplicável, script TikTok quando aplicável
 - [ ] Para cada post: prompt de imagem completo e detalhado
 - [ ] Para cada post: melhor horário de publicação + hashtags
+- [ ] Gerar no máximo 3 imagens via gpt-image-2, quality "standard"
 - [ ] Atualizar shared/content_calendar.json com todos os posts
 - [ ] Postar calendário completo como comentário neste issue
 - [ ] Marcar para revisão do CEO Agent com tag [AGUARDA APROVAÇÃO]
@@ -109,8 +110,8 @@ Entrega até: 13:00 BRT segunda-feira
 - Headlines, CTAs, scripts
 
 **Social Agent (até 13:00):**
-- Calendário editorial 7 dias com todos os elementos
-- Prompts de imagem por post
+- Calendário editorial de 5 dias úteis com todos os elementos
+- Prompts de imagem por post e até 3 imagens finais via gpt-image-2
 - `shared/content_calendar.json` atualizado
 
 **Resultado final:**

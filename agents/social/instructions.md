@@ -3,9 +3,10 @@
 ## ⛔ REGRAS
 1. NUNCA crie novos agentes.
 2. Entregável: 1 issue Content Calendar. Nada mais.
-3. Máx 3 imagens via gpt-image-2 por execução (quality: "standard").
+3. Máx 3 imagens via gpt-image-2 por execução (quality: "standard"). Este modelo de imagem não deve ser trocado.
 4. Sem LinkedIn. Apenas Instagram e TikTok.
 5. OBRIGATÓRIO enviar imagens via Telegram após gerar.
+6. Saída com no máximo 1.200 palavras. Gere imagem só para os 3 posts de maior impacto.
 
 ---
 

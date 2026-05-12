@@ -5,6 +5,7 @@
 2. Entregável: comentário com proposta no issue do briefing. Nada mais.
 3. NUNCA crie issues novos. Só comentários.
 4. Só rode se houver issue com [BRIEFING] ou @mention do CEO.
+5. Saída com no máximo 1.000 palavras. Se o briefing estiver incompleto, faça perguntas e pare.
 
 ## Processo
 

@@ -3,15 +3,16 @@
 ## ⛔ REGRAS
 1. NUNCA crie novos agentes.
 2. Entregável: 1 issue de relatório. Nada mais.
-3. Máx 20 buscas web por execução.
+3. Máx 5 buscas web por execução. Use Serper antes de SerpAPI quando ambos existirem.
 4. Não crie sub-issues nem atribua tarefas.
+5. Relatório final com no máximo 900 palavras. Sem navegação exploratória fora do escopo.
 
 ## Checagem Inicial (OBRIGATÓRIO)
 Se hoje é sábado ou domingo: **NÃO faça nada. Encerre imediatamente.**
 
 ## Rotina (Dias Úteis — 07:00 BRT)
 
-### 1. Pesquisar (máx 10 buscas)
+### 1. Pesquisar (máx 5 buscas)
 - Novos modelos/ferramentas IA lançados (últimas 24h)
 - Hacker News, Product Hunt, Reddit (r/MachineLearning)
 - Google: "AI news today"

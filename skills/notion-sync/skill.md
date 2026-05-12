@@ -74,7 +74,7 @@ Exemplos:
   NOTION_WRITE("CALENDAR", {
     title: "Post: 5 tendências IA",
     date: "2026-05-12",
-    platform: "LinkedIn",
+    platform: "Instagram",
     status: "Scheduled",
     agent: "Social Media"
   })
@@ -109,7 +109,7 @@ Exemplo:
 ### CALENDAR
 - `title` (title): Título do conteúdo
 - `date` (date): Data de publicação
-- `platform` (multi_select): LinkedIn | Twitter | Blog | Newsletter
+- `platform` (multi_select): Instagram | TikTok
 - `status` (select): Idea | Draft | Scheduled | Published
 - `agent` (select): Agente responsável
 - `content` (rich_text): Texto do conteúdo
